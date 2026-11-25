@@ -1,23 +1,21 @@
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class StockPriceAnalyzer {
 
-    static Scanner sc = new Scanner(System.in);
-
     static int[] prices;
-    static int n = 0;
+    static int n;
 
     // 1. Input Stock Prices
-    static void inputPrices() {
+    public static void inputPrices(Scanner sc) {
 
         System.out.print("Enter number of days: ");
         n = sc.nextInt();
 
         if (n <= 0) {
-            System.out.println("Please enter a valid number of days.");
+            System.out.println("Number of days must be positive.");
             n = 0;
+            prices = null;
             return;
         }
 
@@ -30,13 +28,13 @@ public class StockPriceAnalyzer {
             prices[i] = sc.nextInt();
         }
 
-        System.out.println("Stock prices entered successfully!");
+        System.out.println("Stock prices stored successfully!");
     }
 
     // 2. Display Stock Prices
-    static void displayPrices() {
+    public static void displayPrices() {
 
-        System.out.println("Stock Prices:");
+        System.out.println("\nStock Prices:");
 
         for (int i = 0; i < n; i++) {
             System.out.print(prices[i] + " ");
@@ -45,76 +43,79 @@ public class StockPriceAnalyzer {
         System.out.println();
     }
 
-    // 3. Bubble Sort - Ascending Order
-    static int[] sortAscending() {
-
-        int[] arr = Arrays.copyOf(prices, n);
+    // 3. Sort Prices in Ascending Order using Bubble Sort
+    public static void sortAscending() {
 
         for (int i = 0; i < n - 1; i++) {
 
             for (int j = 0; j < n - i - 1; j++) {
 
-                if (arr[j] > arr[j + 1]) {
+                if (prices[j] > prices[j + 1]) {
 
-                    int temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
+                    int temp = prices[j];
+
+                    prices[j] = prices[j + 1];
+
+                    prices[j + 1] = temp;
                 }
             }
         }
 
-        return arr;
+        System.out.println("Prices sorted in Ascending Order:");
+        displayPrices();
     }
 
-    // 4. Bubble Sort - Descending Order
-    static int[] sortDescending() {
-
-        int[] arr = Arrays.copyOf(prices, n);
+    // 4. Sort Prices in Descending Order using Bubble Sort
+    public static void sortDescending() {
 
         for (int i = 0; i < n - 1; i++) {
 
             for (int j = 0; j < n - i - 1; j++) {
 
-                if (arr[j] < arr[j + 1]) {
+                if (prices[j] < prices[j + 1]) {
 
-                    int temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
+                    int temp = prices[j];
+
+                    prices[j] = prices[j + 1];
+
+                    prices[j + 1] = temp;
                 }
             }
         }
 
-        return arr;
+        System.out.println("Prices sorted in Descending Order:");
+        displayPrices();
     }
 
     // 5. Binary Search
-    static void binarySearch(int key) {
+    public static void binarySearch(int key) {
 
-        int[] arr = sortAscending();
+        // Binary Search requires ascending order
+        sortAscendingWithoutDisplay();
 
-        int low = 0;
-        int high = n - 1;
+        int left = 0;
+        int right = n - 1;
         boolean found = false;
 
-        while (low <= high) {
+        while (left <= right) {
 
-            int mid = low + (high - low) / 2;
+            int mid = left + (right - left) / 2;
 
-            if (arr[mid] == key) {
+            if (prices[mid] == key) {
 
-                System.out.println("Stock price found: " + key);
+                System.out.println("Stock price found at index: " + mid);
                 found = true;
                 break;
             }
 
-            else if (arr[mid] < key) {
+            else if (prices[mid] < key) {
 
-                low = mid + 1;
+                left = mid + 1;
             }
 
             else {
 
-                high = mid - 1;
+                right = mid - 1;
             }
         }
 
@@ -123,8 +124,25 @@ public class StockPriceAnalyzer {
         }
     }
 
+    // Helper method for ascending sorting
+    public static void sortAscendingWithoutDisplay() {
+
+        for (int i = 0; i < n - 1; i++) {
+
+            for (int j = 0; j < n - i - 1; j++) {
+
+                if (prices[j] > prices[j + 1]) {
+
+                    int temp = prices[j];
+                    prices[j] = prices[j + 1];
+                    prices[j + 1] = temp;
+                }
+            }
+        }
+    }
+
     // 6. Find Maximum Price
-    static void findMaximum() {
+    public static void findMaximum() {
 
         int max = prices[0];
 
@@ -139,7 +157,7 @@ public class StockPriceAnalyzer {
     }
 
     // 7. Find Minimum Price
-    static void findMinimum() {
+    public static void findMinimum() {
 
         int min = prices[0];
 
@@ -154,12 +172,13 @@ public class StockPriceAnalyzer {
     }
 
     // 8. Calculate Average Price
-    static void calculateAverage() {
+    public static void calculateAverage() {
 
         int sum = 0;
 
         for (int i = 0; i < n; i++) {
-            sum += prices[i];
+
+            sum = sum + prices[i];
         }
 
         double average = (double) sum / n;
@@ -170,83 +189,79 @@ public class StockPriceAnalyzer {
     // 9. Main Method
     public static void main(String[] args) {
 
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("===== STOCK PRICE ANALYZER =====");
+
+        inputPrices(sc);
+
+        if (n == 0) {
+            sc.close();
+            return;
+        }
+
         int choice;
 
         do {
 
-            System.out.println("\n===== STOCK PRICE ANALYZER =====");
+            System.out.println("\n===== MAIN MENU =====");
 
-            System.out.println("1. Enter Stock Prices");
-            System.out.println("2. Display Stock Prices");
-            System.out.println("3. Sort Prices (Ascending)");
-            System.out.println("4. Sort Prices (Descending)");
-            System.out.println("5. Search Stock Price");
-            System.out.println("6. Find Maximum Price");
-            System.out.println("7. Find Minimum Price");
-            System.out.println("8. Calculate Average Price");
-            System.out.println("9. Exit");
+            System.out.println("1. Display Stock Prices");
+            System.out.println("2. Sort Prices (Ascending)");
+            System.out.println("3. Sort Prices (Descending)");
+            System.out.println("4. Search Stock Price");
+            System.out.println("5. Find Maximum Price");
+            System.out.println("6. Find Minimum Price");
+            System.out.println("7. Calculate Average Price");
+            System.out.println("8. Exit");
 
             System.out.print("Enter your choice: ");
 
             choice = sc.nextInt();
 
-            if (choice == 1) {
+            switch (choice) {
 
-                inputPrices();
+                case 1:
+                    displayPrices();
+                    break;
+
+                case 2:
+                    sortAscending();
+                    break;
+
+                case 3:
+                    sortDescending();
+                    break;
+
+                case 4:
+                    System.out.print("Enter price to search: ");
+                    int key = sc.nextInt();
+                    binarySearch(key);
+                    break;
+
+                case 5:
+                    findMaximum();
+                    break;
+
+                case 6:
+                    findMinimum();
+                    break;
+
+                case 7:
+                    calculateAverage();
+                    break;
+
+                case 8:
+                    System.out.println("Thank you for using Stock Price Analyzer!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Try again.");
             }
 
-            else if (choice >= 2 && choice <= 8 && n == 0) {
-
-                System.out.println("Please enter stock prices first!");
-            }
-
-            else {
-
-                switch (choice) {
-
-                    case 2:
-                        displayPrices();
-                        break;
-
-                    case 3:
-                        System.out.println("Ascending Order:");
-                        System.out.println(Arrays.toString(sortAscending()));
-                        break;
-
-                    case 4:
-                        System.out.println("Descending Order:");
-                        System.out.println(Arrays.toString(sortDescending()));
-                        break;
-
-                    case 5:
-                        System.out.print("Enter price to search: ");
-                        int key = sc.nextInt();
-                        binarySearch(key);
-                        break;
-
-                    case 6:
-                        findMaximum();
-                        break;
-
-                    case 7:
-                        findMinimum();
-                        break;
-
-                    case 8:
-                        calculateAverage();
-                        break;
-
-                    case 9:
-                        System.out.println("Thank you for using Stock Price Analyzer!");
-                        break;
-
-                    default:
-                        System.out.println("Invalid choice! Try again.");
-                }
-            }
-
-        } while (choice != 9);
+        } while (choice != 8);
 
         sc.close();
     }
 }
+
