@@ -1,0 +1,15 @@
+150.50
+165.25
+140.00
+200.50
+180.75
+// Analysis
+Highest: 200.50 (Day 4)
+Lowest: 140.00 (Day 3)
+Average: 167.40
+//Ascending order
+140.00 150.50 165.25 180.75 200.50
+// Binary Search
+Enter price to search: 165.25
+
+Price 165.25 found at position 3
